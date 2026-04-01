@@ -1,59 +1,159 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# TUK Ability Club Portal
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> Disability Club Management System
 
-## About Laravel
+Group Name: **The Three Muskateers**
+- Margaret Wambui Nduta
+- Terry Mwikali
+- Mararo Emmanuel Igathe
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 1. Project Overview
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1.1 Project Description
 
-## Learning Laravel
+The TUK Ability Club Portal is a web-based platform built for the Technical University of Kenya Disability Club. It allows members to register, authenticate, track financial data, browse events, and read club blog posts. The goal is to improve communication, transparency, and engagement for all club participants.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 1.2 Project Objectives
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Secure registration and login for club members.
+- Role-based access control with Member, Executive, and Admin roles.
+- Event management with calendar view, RSVP and reminders.
+- Financial tracking for income, expenses and balances.
+- Blog system for announcements, stories, and updates.
+- Accessible, responsive and user-friendly UI.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 2. Technology Stack
 
-### Premium Partners
+### Backend
+- PHP 8+ and Laravel 11
+- MySQL
+- Composer
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Frontend
+- HTML5
+- CSS3 with Tailwind CSS
+- JavaScript
+- Alpine.js
 
-## Contributing
+### Tools
+- XAMPP (local dev environment)
+- npm (asset tooling)
+- Git (version control)
+- Visual Studio Code
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 3. Functional Requirements
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### User Authentication
+- Member registration with name, student ID, email, password.
+- Login via email or student ID + password.
+- Password reset via email links.
+- Admin approval for new users before full access.
+- Role-based permissions: Member, Executive, Admin.
 
-## Security Vulnerabilities
+### Event Management
+- Executives can create/edit/delete events (title, date, time, location, description).
+- Members view upcoming events and RSVP.
+- Event reminders for RSVP participants.
+- Archive past events for history.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Financial Management
+- Executives log income/expense transactions (amount, description, category, date).
+- Members view summaries, history, and balances.
+- Charts showing financial health over time.
 
-## License
+### Blog Management
+- Executives manage posts (create/edit/delete).
+- Posts have author, date, category, title, content, optional media.
+- Members read and comment on posts.
+- Recent and featured posts on the homepage.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Member Management
+- Admins approve users and set roles.
+- Directory of approved members for networking.
+
+---
+
+## 4. Non-functional Requirements
+
+- WCAG 2.1 Level AA accessibility.
+- Load time < 3 seconds.
+- Security: bcrypt passwords, CSRF, XSS, SQL injection protections.
+- Mobile-first responsive design.
+- Cross-browser support (Chrome/Firefox/Safari/Edge).
+- Data privacy and backups.
+
+---
+
+## 5. User Roles and Permissions
+
+- **Guest**: view homepage, events, blogs, register account.
+- **Member**: view events, RSVP, financial reports, blog reading/commenting, directory.
+- **Executive**: member + manage events, blogs, transactions.
+- **Admin**: executive + approve users, assign roles, manage settings.
+
+---
+
+## 6. Database Structure
+
+Main tables:
+- `users`: name, student_id, email, password_hash, role, is_approved, contact.
+- `events`: title, description, date, time, location, capacity.
+- `event_registrations`: user_id, event_id, status, registered_at.
+- `transactions`: type, description, amount, date, category, receipt, created_by.
+- `blog_posts`: title, body, author_id, category, published_at.
+- `comments`: post_id, user_id, message, created_at.
+
+---
+
+## 7. Project Timeline
+
+1. Requirements definition - 3 days
+2. Database design & migrations - 2 days
+3. Authentication module - 5 days
+4. Event system - 5 days
+5. Financial module - 5 days
+6. Blog module - 4 days
+7. Frontend integration - 6 days
+8. Testing & debugging - 4 days
+9. Deployment & documentation - 3 days
+
+Total: 37 days
+
+---
+
+## 8. Deliverables
+
+- Fully functional Laravel application.
+- MySQL database schema and seeds.
+- Responsive UI with Tailwind.
+- Role-based authentication and admin approval.
+- Event calendar with RSVP.
+- Finance dashboard with charts.
+- Blog with comments.
+- User & technical documentation.
+- Git repository with history.
+
+---
+
+## 9. How to Run Locally
+
+1. Clone this repository.
+2. Copy `.env.example` to `.env`.
+3. Set MySQL credentials and DB name in `.env`.
+4. Run `composer install`.
+5. Run `npm install && npm run dev`.
+6. Run `php artisan key:generate`.
+7. Migrate `php artisan migrate --seed`.
+8. Start server `php artisan serve`.
+
+---
+
+## 10. License
+
+MIT
