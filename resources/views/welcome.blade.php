@@ -1,3 +1,202 @@
+@extends('layouts.guest')
+
+@section('content')
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-indigo-900">
+    <!-- Navigation for Guests -->
+    <nav class="bg-white dark:bg-gray-800 shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">🎓 TUK Ability Club</h1>
+                </div>
+                <div class="flex space-x-4">
+                    @if (Route::has('login'))
+                        @auth
+                            <a href="{{ url('/dashboard') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Dashboard</a>
+                        @else
+                            <a href="{{ route('login') }}" class="px-4 py-2 text-indigo-600 hover:text-indigo-800">Login</a>
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Register</a>
+                            @endif
+                        @endauth
+                    @endif
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                Welcome to TUK Ability Club
+            </h2>
+            <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">
+                Empowering students with disabilities through community, events, and support
+            </p>
+            @if (!Auth::check())
+                <a href="{{ route('register') }}" class="inline-block px-8 py-4 bg-indigo-600 text-white text-lg rounded-lg hover:bg-indigo-700 transition">
+                    Join Our Community
+                </a>
+            @endif
+        </div>
+
+        <!-- Upcoming Events Section -->
+        <div class="mb-16">
+            <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Upcoming Events</h3>
+            <div class="grid md:grid-cols-3 gap-6">
+                @forelse (\App\Models\Event::upcoming()->take(3)->get() as $event)
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm text-indigo-600 dark:text-indigo-400 font-semibold">
+                                    {{ $event->date->format('M d, Y') }}
+                                </span>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">
+                                    {{ $event->time }}
+                                </span>
+                            </div>
+                            <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                                {{ $event->title }}
+                            </h4>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
+                                {{ \Illuminate\Support\Str::limit($event->description, 100) }}
+                            </p>
+                            <div class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-4">
+                                <span>📍</span>
+                                <span class="ml-2">{{ $event->location }}</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-500 dark:text-gray-400">
+                                    👥 {{ $event->registrations->count() }}/{{ $event->capacity }} attending
+                                </span>
+                                @auth
+                                    <a href="{{ route('events.show', $event) }}" class="text-indigo-600 dark:text-indigo-400 hover:underline text-sm font-semibold">
+                                        View →
+                                    </a>
+                                @endauth
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-gray-600 dark:text-gray-400 text-lg">
+                            No upcoming events yet. Check back soon!
+                        </p>
+                    </div>
+                @endforelse
+            </div>
+            @auth
+                <div class="text-center mt-8">
+                    <a href="{{ route('events.index') }}" class="inline-block px-6 py-3 border-2 border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-800 transition font-semibold">
+                        View All Events
+                    </a>
+                </div>
+            @endauth
+        </div>
+
+        <!-- Latest Blog Posts Section -->
+        <div class="mb-16">
+            <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Latest Updates</h3>
+            <div class="grid md:grid-cols-2 gap-8">
+                @forelse (\App\Models\BlogPost::recent()->take(4)->get() as $post)
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
+                        @if ($post->featured_image_path)
+                            <img src="{{ asset('storage/' . $post->featured_image_path) }}" 
+                                 alt="{{ $post->title }}" 
+                                 class="w-full h-48 object-cover">
+                        @else
+                            <div class="w-full h-48 bg-gradient-to-br from-indigo-200 to-blue-200 dark:from-indigo-900 dark:to-blue-900 flex items-center justify-center">
+                                <span class="text-4xl">📰</span>
+                            </div>
+                        @endif
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase">
+                                    {{ ucfirst($post->category) }}
+                                </span>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">
+                                    {{ $post->created_at->format('M d') }}
+                                </span>
+                            </div>
+                            <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                                {{ $post->title }}
+                            </h4>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
+                                {{ $post->getExcerpt() }}
+                            </p>
+                            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
+                                <span>✍️</span>
+                                <span class="ml-2">{{ $post->author->name ?? 'Admin' }}</span>
+                            </div>
+                            @auth
+                                <a href="{{ route('blog.show', $post) }}" class="inline-block text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">
+                                    Read More →
+                                </a>
+                            @else
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">
+                                    <a href="{{ route('login') }}" class="text-indigo-600 dark:text-indigo-400 hover:underline">Login</a> to read full post
+                                </p>
+                            @endauth
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-gray-600 dark:text-gray-400 text-lg">
+                            No blog posts yet. Stay tuned for updates!
+                        </p>
+                    </div>
+                @endforelse
+            </div>
+            @auth
+                <div class="text-center mt-8">
+                    <a href="{{ route('blog.index') }}" class="inline-block px-6 py-3 border-2 border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-800 transition font-semibold">
+                        View All Posts
+                    </a>
+                </div>
+            @endauth
+        </div>
+
+        <!-- Call to Action -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-12 text-center">
+            <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Ready to Join?
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
+                Become part of a vibrant community dedicated to supporting students with disabilities at TUK. 
+                Connect with peers, attend enriching events, and access valuable resources.
+            </p>
+            @if (!Auth::check())
+                <div class="flex gap-4 justify-center">
+                    <a href="{{ route('register') }}" class="px-8 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold">
+                        Create Account
+                    </a>
+                    <a href="{{ route('login') }}" class="px-8 py-3 border-2 border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700 transition font-semibold">
+                        Sign In
+                    </a>
+                </div>
+            @else
+                <a href="{{ url('/dashboard') }}" class="inline-block px-8 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold">
+                    Go to Dashboard
+                </a>
+            @endif
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 dark:bg-black text-white py-8 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-400">
+                &copy; {{ date('Y') }} TUK Ability Club. All rights reserved. 
+                <br>
+                <span class="text-sm mt-2">Empowering students, building community, creating opportunity.</span>
+            </p>
+        </div>
+    </footer>
+</div>
+@endsection
+
+<!-- Original file reference kept for history:
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>

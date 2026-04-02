@@ -52,4 +52,68 @@ class User extends Authenticatable
             'approval_status' => 'string',
         ];
     }
+
+    /**
+     * User has many events they created
+     */
+    public function createdEvents()
+    {
+        return $this->hasMany(Event::class, 'created_by');
+    }
+
+    /**
+     * User has many events they registered for
+     */
+    public function eventRegistrations()
+    {
+        return $this->hasMany(EventRegistration::class);
+    }
+
+    /**
+     * User has many blog posts
+     */
+    public function blogPosts()
+    {
+        return $this->hasMany(BlogPost::class, 'author_id');
+    }
+
+    /**
+     * User has many comments
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * User has many transactions
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'created_by');
+    }
+
+    /**
+     * Check if user is admin
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is executive
+     */
+    public function isExecutive()
+    {
+        return $this->role === 'executive' || $this->isAdmin();
+    }
+
+    /**
+     * Check if user is approved
+     */
+    public function isApproved()
+    {
+        return $this->approval_status === 'approved';
+    }
 }
