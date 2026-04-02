@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('student_id')->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role', ['member', 'executive', 'admin'])->default('member');
+            $table->enum('approval_status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->text('contact_details')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
