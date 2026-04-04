@@ -1,11 +1,111 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    {{-- Back Button --}}
-    <a href="{{ route('events.index') }}" class="text-indigo-600 dark:text-indigo-400 hover:underline mb-6 inline-flex items-center">
-        ← Back to Events
-    </a>
+<div class="space-y-8">
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+        <a href="{{ route('events.index') }}" class="hover:text-blue-600 dark:hover:text-blue-400">📅 Events</a>
+        <span>/</span>
+        <span class="text-gray-900 dark:text-white font-semibold">{{ $event->title }}</span>
+    </div>
+
+    <!-- Event Card -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <!-- Header Image -->
+        <div class="h-80 bg-gradient-to-br from-blue-300 to-cyan-300 dark:from-blue-900 dark:to-cyan-900 flex items-center justify-center text-8xl opacity-30 relative">
+            <div class="absolute inset-0 bg-blue-600/20 dark:bg-blue-900/40"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-8 md:p-12">
+            <!-- Header -->
+            <div class="flex justify-between items-start mb-6 pb-6 border-b border-slate-200 dark:border-slate-700">
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-2">{{ $event->title }}</h1>
+                    <p class="text-blue-600 dark:text-blue-400 font-semibold">Organized by {{ $event->creator->name }}</p>
+                </div>
+                @if (Auth::user()->id === $event->created_by || Auth::user()->isAdmin())
+                    <div class="flex gap-2">
+                        <a href="{{ route('events.edit', $event) }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-semibold">✏️ Edit</a>
+                        <form action="{{ route('events.destroy', $event) }}" method="POST" class="inline" onsubmit="return confirm('Delete this event?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition font-semibold">🗑️ Delete</button>
+                        </form>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Event Details Grid -->
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-blue-50 dark:bg-blue-950/30 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">📅 Date</p>
+                    <p class="font-bold text-gray-900 dark:text-white">{{ $event->date->format('M d, Y') }}</p>
+                </div>
+                <div class="bg-blue-50 dark:bg-blue-950/30 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">⏰ Time</p>
+                    <p class="font-bold text-gray-900 dark:text-white">{{ $event->time }}</p>
+                </div>
+                <div class="bg-blue-50 dark:bg-blue-950/30 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">📍 Location</p>
+                    <p class="font-bold text-gray-900 dark:text-white">{{ $event->location }}</p>
+                </div>
+                <div class="bg-blue-50 dark:bg-blue-950/30 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">👥 Attendees</p>
+                    <p class="font-bold text-gray-900 dark:text-white">{{ $event->registrations->count() }}/{{ $event->capacity }}</p>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-8 pb-8 border-b border-slate-200 dark:border-slate-700">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">📋 Details</h2>
+                <p class="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">{{ $event->description }}</p>
+            </div>
+
+            <!-- RSVP Section -->
+            @auth
+                <div class="bg-blue-50 dark:bg-blue-950/30 rounded-xl border-2 border-blue-200 dark:border-blue-800 p-8">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">✓ RSVP Status</h2>
+                    @php
+                        $registration = Auth::user()->eventRegistrations()->where('event_id', $event->id)->first();
+                    @endphp
+                    @if ($registration)
+                        <p class="text-lg text-blue-600 dark:text-blue-400 font-semibold mb-4">You're registered! Status: {{ ucfirst($registration->rsvp_status) }}</p>
+                        <form method="POST" action="{{ route('events.rsvp', $event) }}" class="inline" onsubmit="return confirm('Cancel your RSVP?');">
+                            @csrf
+                            <button type="submit" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition font-semibold">Cancel RSVP</button>
+                        </form>
+                    @else
+                        <p class="text-gray-700 dark:text-gray-300 mb-4">Join this event</p>
+                        <form method="POST" action="{{ route('events.rsvp', $event) }}">
+                            @csrf
+                            <button type="submit" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-semibold">✓ RSVP Now</button>
+                        </form>
+                    @endif
+                </div>
+            @endauth
+        </div>
+    </div>
+
+    <!-- Attendees List -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-8">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">👥 Attendees ({{ $event->registrations->count() }})</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            @forelse ($event->registrations as $reg)
+                <div class="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <div class="w-12 h-12 bg-blue-200 dark:bg-blue-900/40 rounded-full flex items-center justify-center font-bold mb-2">
+                        {{ substr($reg->user->name, 0, 1) }}
+                    </div>
+                    <p class="font-semibold text-gray-900 dark:text-white">{{ $reg->user->name }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ ucfirst($reg->rsvp_status) }}</p>
+                </div>
+            @empty
+                <p class="text-gray-500 dark:text-gray-400">No one has RSVP'd yet</p>
+            @endforelse
+        </div>
+    </div>
+</div>
+@endsection
 
     {{-- Event Header --}}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden mb-8">
