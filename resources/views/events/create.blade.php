@@ -101,13 +101,13 @@
                 @enderror
             </div>
 
-            {{-- Form Actions --}}
-            <div class="flex gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <button type="submit" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold">
-                    {{ isset($event) ? 'Update Event' : 'Create Event' }}
+            <!-- Buttons -->
+            <div class="flex gap-3 pt-6 border-t border-slate-200 dark:border-slate-700">
+                <button type="submit" class="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition transform hover:scale-105">
+                    ✓ {{ isset($event) ? 'Update Event' : 'Create Event' }}
                 </button>
-                <a href="{{ route('events.index') }}" class="px-6 py-3 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg hover:bg-gray-400 dark:hover:bg-gray-700 transition font-semibold">
-                    Cancel
+                <a href="{{ route('events.index') }}" class="flex-1 px-6 py-3 bg-slate-300 hover:bg-slate-400 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-900 dark:text-white font-bold rounded-lg transition text-center">
+                    ✕ Cancel
                 </a>
             </div>
         </form>
