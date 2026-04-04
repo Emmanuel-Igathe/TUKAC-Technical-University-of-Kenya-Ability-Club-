@@ -1,14 +1,44 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    {{-- Header --}}
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Welcome, {{ Auth::user()->name }}!</h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">
-            Student ID: <span class="font-semibold">{{ Auth::user()->student_id }}</span> | 
-            Role: <span class="font-semibold capitalize">{{ Auth::user()->role }}</span>
-        </p>
+<div class="space-y-8">
+    <!-- Header Section with Gradient -->
+    <div class="bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-700 dark:to-blue-700 rounded-2xl shadow-xl p-8 text-white overflow-hidden relative">
+        <div class="absolute top-0 right-0 opacity-10 text-8xl">🎓</div>
+        <div class="relative z-10">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2">Welcome back, {{ Auth::user()->name }}! 👋</h1>
+            <p class="text-indigo-100 text-lg">Student ID: <span class="font-mono font-semibold">{{ Auth::user()->student_id }}</span> • Role: <span class="font-semibold capitalize">{{ Auth::user()->role }}</span></p>
+        </div>
+    </div>
+
+    <!-- Status Alerts -->
+    @if (Auth::user()->approval_status === 'pending')
+        <div class="bg-amber-50 dark:bg-amber-950 border-2 border-amber-200 dark:border-amber-800 rounded-xl p-6 flex items-start gap-4 animate-pulse">
+            <span class="text-3xl flex-shrink-0 pt-1">⏳</span>
+            <div>
+                <h3 class="font-semibold text-amber-900 dark:text-amber-100 mb-1">Account Pending Approval</h3>
+                <p class="text-amber-700 dark:text-amber-200 text-sm">Your account is being reviewed by our admin team. You'll get full access once approved!</p>
+            </div>
+        </div>
+    @elseif (Auth::user()->approval_status === 'rejected')
+        <div class="bg-red-50 dark:bg-red-950 border-2 border-red-200 dark:border-red-800 rounded-xl p-6 flex items-start gap-4">
+            <span class="text-3xl flex-shrink-0 pt-1">❌</span>
+            <div>
+                <h3 class="font-semibold text-red-900 dark:text-red-100 mb-1">Account Rejected</h3>
+                <p class="text-red-700 dark:text-red-200 text-sm">Your application was rejected. Please <a href="#" class="underline font-semibold hover:text-red-800 dark:hover:text-red-100">contact support</a> for more information.</p>
+            </div>
+        </div>
+    @elseif (Auth::user()->approval_status === 'pending')
+        <div class="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-lg">
+            <p class="text-yellow-800 dark:text-yellow-200">
+                ⏳ Your account is pending admin approval. You'll get full access once approved.
+            </p>
+        </div>
+    @elseif (Auth::user()->approval_status === 'rejected')
+        <div class="mt-4 p-4 bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-lg">
+            <p class="text-red-800 dark:text-red-200">
+                ❌ Your account has been rejected. Please contact admin for more information.
+            </p>
         @if (Auth::user()->approval_status === 'pending')
             <div class="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-lg">
                 <p class="text-yellow-800 dark:text-yellow-200">
