@@ -1,21 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    {{-- Header --}}
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Finance Dashboard</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-2">Track club income and expenses</p>
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div class="bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-700 dark:to-teal-700 rounded-2xl shadow-xl p-8 text-white flex-1">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2">💰 Finance Dashboard</h1>
+            <p class="text-emerald-100 text-lg">Track club income and expenses</p>
         </div>
         @if (Auth::user()->isExecutive() || Auth::user()->isAdmin())
-            <a href="{{ route('finance.transactions.create') }}" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold">
+            <a href="{{ route('finance.transactions.create') }}" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition font-semibold whitespace-nowrap">
                 + Record Transaction
             </a>
         @endif
     </div>
 
-    {{-- Financial Overview Cards --}}
+    <!-- Financial Overview Cards -->
     @php
         $totalIncome = \App\Models\Transaction::income()->sum('amount');
         $totalExpenses = \App\Models\Transaction::expense()->sum('amount');
@@ -24,7 +24,7 @@
         $thisMonthExpenses = \App\Models\Transaction::expense()->whereMonth('date', now()->month)->sum('amount');
     @endphp
 
-    <div class="grid md:grid-cols-4 gap-6 mb-8">
+    <div class="grid md:grid-cols-4 gap-6">
         {{-- Total Income Card --}}
         <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900 dark:to-emerald-900 rounded-lg shadow p-6 border-l-4 border-green-500">
             <div class="flex items-center justify-between">

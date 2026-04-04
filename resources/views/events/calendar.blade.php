@@ -1,41 +1,42 @@
 @extends('layouts.app')
 
 @section('title', 'Events Calendar - TUK Ability Club')
-@section('header', 'Events Calendar')
 
 @section('content')
-<div class="space-y-6">
-    <!-- Calendar Header -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div class="md:col-span-3">
-            <div class="bg-white rounded-lg shadow-sm p-6">
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-700 dark:to-cyan-700 rounded-2xl shadow-xl p-8 text-white">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2">📅 Events Calendar</h1>
+        <p class="text-blue-100 text-lg">View all upcoming and past club events</p>
+    </div>
+
+    <!-- Calendar Grid Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Main Calendar -->
+        <div class="lg:col-span-3">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-8">
+                <!-- Calendar Controls -->
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800" id="monthYear"></h2>
-                    <div class="flex space-x-2">
-                        <button onclick="previousMonth()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                            <i class="fas fa-chevron-left"></i> Previous
-                        </button>
-                        <button onclick="currentMonth()" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
-                            Today
-                        </button>
-                        <button onclick="nextMonth()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                            Next <i class="fas fa-chevron-right"></i>
-                        </button>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white" id="monthYear"></h2>
+                    <div class="flex gap-2">
+                        <button onclick="previousMonth()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-semibold">← Prev</button>
+                        <button onclick="currentMonth()" class="px-4 py-2 bg-slate-500 hover:bg-slate-600 text-white rounded-lg transition font-semibold">Today</button>
+                        <button onclick="nextMonth()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-semibold">Next →</button>
                     </div>
                 </div>
 
-                <!-- Calendar Grid -->
+                <!-- Calendar Table -->
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse">
-                        <thead class="bg-gray-100">
+                        <thead class="bg-blue-50 dark:bg-slate-700/50">
                             <tr>
-                                <th class="border border-gray-300 p-2 text-center text-gray-700 font-semibold">Sun</th>
-                                <th class="border border-gray-300 p-2 text-center text-gray-700 font-semibold">Mon</th>
-                                <th class="border border-gray-300 p-2 text-center text-gray-700 font-semibold">Tue</th>
-                                <th class="border border-gray-300 p-2 text-center text-gray-700 font-semibold">Wed</th>
-                                <th class="border border-gray-300 p-2 text-center text-gray-700 font-semibold">Thu</th>
-                                <th class="border border-gray-300 p-2 text-center text-gray-700 font-semibold">Fri</th>
-                                <th class="border border-gray-300 p-2 text-center text-gray-700 font-semibold">Sat</th>
+                                <th class="border border-slate-200 dark:border-slate-600 p-3 text-center font-bold text-gray-800 dark:text-white">Sun</th>
+                                <th class="border border-slate-200 dark:border-slate-600 p-3 text-center font-bold text-gray-800 dark:text-white">Mon</th>
+                                <th class="border border-slate-200 dark:border-slate-600 p-3 text-center font-bold text-gray-800 dark:text-white">Tue</th>
+                                <th class="border border-slate-200 dark:border-slate-600 p-3 text-center font-bold text-gray-800 dark:text-white">Wed</th>
+                                <th class="border border-slate-200 dark:border-slate-600 p-3 text-center font-bold text-gray-800 dark:text-white">Thu</th>
+                                <th class="border border-slate-200 dark:border-slate-600 p-3 text-center font-bold text-gray-800 dark:text-white">Fri</th>
+                                <th class="border border-slate-200 dark:border-slate-600 p-3 text-center font-bold text-gray-800 dark:text-white">Sat</th>
                             </tr>
                         </thead>
                         <tbody id="calendarBody"></tbody>
@@ -44,72 +45,59 @@
             </div>
         </div>
 
-        <!-- Sidebar: Quick Add Event -->
-        <div class="bg-white rounded-lg shadow-sm p-6 h-fit">
-            <h3 class="text-lg font-bold text-gray-800 mb-4">
-                <i class="fas fa-plus-circle text-blue-600 mr-2"></i>Quick Add
-            </h3>
-            <a href="{{ route('events.create') }}" class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg text-center transition duration-200 mb-4">
-                Create Event
-            </a>
+        <!-- Sidebar -->
+        <div class="space-y-6">
+            <!-- Quick Add Card -->
+            <div class="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/50 dark:to-cyan-950/50 rounded-2xl border-2 border-blue-200 dark:border-blue-800 p-6">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">📝 Quick Add</h3>
+                <a href="{{ route('events.create') }}" class="block w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition text-center">
+                    + Create Event
+                </a>
+            </div>
 
-            <!-- Upcoming Events Preview -->
-            <h3 class="text-lg font-bold text-gray-800 mb-4 mt-6">
-                <i class="fas fa-clock text-blue-600 mr-2"></i>Upcoming (7 days)
-            </h3>
-            <div class="space-y-3">
-                @forelse($upcomingEvents ?? [] as $event)
-                    <div class="border-l-4 border-blue-600 bg-blue-50 p-3 rounded">
-                        <a href="{{ route('events.show', $event) }}" class="font-semibold text-blue-600 hover:text-blue-700">
-                            {{ $event->title }}
+            <!-- Upcoming Events -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-6">
+                <h3 class="font-bold text-gray-900 dark:text-white mb-4">🔔 Next 7 Days</h3>
+                <div class="space-y-3">
+                    @forelse($upcomingEvents ?? [] as $event)
+                        <a href="{{ route('events.show', $event) }}" class="block p-3 bg-blue-50 dark:bg-slate-700/50 border-l-4 border-blue-600 rounded hover:shadow-md transition">
+                            <p class="font-semibold text-gray-900 dark:text-white text-sm">{{ $event->title }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $event->date->format('M d') }}</p>
                         </a>
-                        <p class="text-sm text-gray-600">
-                            <i class="fas fa-calendar mr-1"></i>{{ $event->date->format('M d') }}
-                        </p>
-                    </div>
-                @empty
-                    <p class="text-gray-500 text-sm">No upcoming events in the next 7 days</p>
-                @endforelse
+                    @empty
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">No upcoming events</p>
+                    @endforelse
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- All Events List (below calendar) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-        <h2 class="col-span-full text-2xl font-bold text-gray-800 mb-2">All Events</h2>
+    <!-- All Events Section -->
+    <div>
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">📋 All Events</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></h2>
 
-        @forelse($events ?? [] as $event)
-            <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-200 overflow-hidden">
-                <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 text-white">
-                    <h3 class="text-xl font-bold">{{ $event->title }}</h3>
-                    <p class="text-sm opacity-90">{{ $event->description }}</p>
-                </div>
-                <div class="p-6 space-y-3">
-                    <div class="flex items-center text-gray-600">
-                        <i class="fas fa-calendar w-5 mr-3 text-blue-600"></i>
-                        <span>{{ $event->date->format('M d, Y') }} @ {{ $event->time }}</span>
-                    </div>
-                    <div class="flex items-center text-gray-600">
-                        <i class="fas fa-map-marker-alt w-5 mr-3 text-blue-600"></i>
-                        <span>{{ $event->location }}</span>
-                    </div>
-                    <div class="flex items-center text-gray-600">
-                        <i class="fas fa-users w-5 mr-3 text-blue-600"></i>
-                        <span>{{ $event->registrations_count ?? 0 }} / {{ $event->capacity }} attendees</span>
-                    </div>
-                    <div class="pt-3 border-t border-gray-200">
-                        <a href="{{ route('events.show', $event) }}" class="text-blue-600 hover:text-blue-700 font-semibold">
-                            View Details <i class="fas fa-arrow-right ml-1"></i>
+            @forelse($events ?? [] as $event)
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition">
+                    <div class="h-32 bg-gradient-to-r from-blue-400 to-cyan-400 dark:from-blue-900 dark:to-cyan-900 flex items-center justify-center text-5xl">📅</div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">{{ $event->title }}</h3>
+                        <div class="space-y-2 text-sm text-gray-600 dark:text-gray-300 mb-4">
+                            <p>📅 {{ $event->date->format('M d, Y') }} @ {{ $event->time }}</p>
+                            <p>📍 {{ $event->location }}</p>
+                            <p>👥 {{ $event->registrations_count ?? 0 }} / {{ $event->capacity }} attendees</p>
+                        </div>
+                        <a href="{{ route('events.show', $event) }}" class="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition">
+                            View Details →
                         </a>
                     </div>
                 </div>
-            </div>
-        @empty
-            <div class="col-span-full text-center py-12">
-                <i class="fas fa-calendar-times text-gray-300 text-5xl mb-4"></i>
-                <p class="text-gray-500">No events scheduled yet</p>
-            </div>
-        @endforelse
+            @empty
+                <div class="col-span-full text-center py-12">
+                    <p class="text-gray-500 dark:text-gray-400 text-lg">No events scheduled yet</p>
+                </div>
+            @endforelse
+        </div>
     </div>
 </div>
 
@@ -135,8 +123,14 @@ function renderCalendar() {
     for (let i = 0; i < 6; i++) {
         html += '<tr>';
         for (let j = 0; j < 7; j++) {
-            const tdClass = date.getMonth() !== month ? 'bg-gray-50 text-gray-400' : date.toDateString() === new Date().toDateString() ? 'bg-blue-100 font-bold text-blue-600' : 'bg-white';
-            html += `<td class="border border-gray-300 p-2 h-24 ${tdClass} text-sm"><strong>${date.getDate()}</strong></td>`;
+            const isCurrentMonth = date.getMonth() === month;
+            const isToday = date.toDateString() === new Date().toDateString();
+            
+            let cellClass = 'border border-slate-200 dark:border-slate-600 p-3 h-24 text-sm ';
+            cellClass += isCurrentMonth ? 'bg-white dark:bg-slate-800' : 'bg-slate-50 dark:bg-slate-900 text-gray-400 dark:text-gray-600';
+            cellClass += isToday ? ' bg-blue-100 dark:bg-blue-900/30 font-bold text-blue-700 dark:text-blue-400' : '';
+            
+            html += `<td class="${cellClass}"><strong>${date.getDate()}</strong></td>`;
             date.setDate(date.getDate() + 1);
         }
         html += '</tr>';
