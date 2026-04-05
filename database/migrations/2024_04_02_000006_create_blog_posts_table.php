@@ -11,10 +11,11 @@ return new class extends Migration
         Schema::create('blog_posts', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->longText('content');
-            $table->foreignId('author_id')->constrained('users')->onDelete('cascade');
-            $table->enum('category', ['announcements', 'stories', 'updates'])->default('updates');
-            $table->string('featured_image_path')->nullable();
+            $table->string('slug')->unique();
+            $table->longText('body');
+            $table->string('image_path')->nullable();
+            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+            $table->dateTime('published_at')->nullable();
             $table->timestamps();
         });
     }
