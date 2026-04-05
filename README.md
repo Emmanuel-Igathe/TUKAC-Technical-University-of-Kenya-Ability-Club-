@@ -4,7 +4,7 @@
 
 Group Name: **The Three Muskateers**
 - Margaret Wambui Nduta
-- Terry Mwikali
+
 - Mararo Emmanuel Igathe
 
 ---
