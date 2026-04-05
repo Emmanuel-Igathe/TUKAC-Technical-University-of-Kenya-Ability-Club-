@@ -12,10 +12,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->date('date');
-            $table->time('time');
+            $table->dateTime('event_date');
             $table->string('location');
-            $table->integer('capacity');
+            $table->string('image_path')->nullable();
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
